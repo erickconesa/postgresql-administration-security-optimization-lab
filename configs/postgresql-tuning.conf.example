@@ -1,0 +1,92 @@
+
+# PostgreSQL 17 - Memory and Connection Tuning
+# ASIR Database Administration & Optimization Lab
+#
+# Sanitized educational example based on CT-04.
+#
+# Laboratory container resources:
+#   Memory limit: 512 MiB
+#   CPU limit:    0.5 CPU
+#
+# These settings were selected for a small
+# resource-constrained environment.
+# They are NOT universal production recommendations.
+
+# --------------------------------------------------
+# CONNECTION MANAGEMENT
+# --------------------------------------------------
+
+# Reduced from 100 to 30 connections.
+# Limits potential memory consumption from
+# concurrent database sessions.
+
+max_connections = 30
+
+# --------------------------------------------------
+# SHARED MEMORY
+# --------------------------------------------------
+
+# Reduced from 128 MB to 64 MB.
+# Reserves less shared memory in a 512 MiB container.
+
+shared_buffers = 64MB
+
+# --------------------------------------------------
+# QUERY WORKING MEMORY
+# --------------------------------------------------
+
+# Reduced from 4 MB to 2 MB.
+# Memory may be allocated per sort/hash operation,
+# potentially multiple times within a single query.
+
+work_mem = 2MB
+
+# --------------------------------------------------
+# VALIDATION PERFORMED IN THE LABORATORY
+# --------------------------------------------------
+
+# PostgreSQL configuration was checked using:
+#
+# SELECT name, setting, unit, pending_restart
+# FROM pg_settings
+# WHERE name IN (
+#     'max_connections',
+#     'shared_buffers',
+#     'work_mem'
+# )
+# ORDER BY name;
+#
+# Verified effective values:
+#
+# max_connections = 30
+# shared_buffers  = 64 MB
+# work_mem        = 2 MB
+#
+# pending_restart = false for all three.
+#
+# Functional concurrency test:
+#   2 concurrent connections
+#   30 SELECT queries per connection
+#   60 queries completed
+#   0 errors
+#   Observed duration: 0.090 seconds
+#
+# The test verifies basic functionality, not maximum
+# database throughput or production capacity.
+
+# --------------------------------------------------
+# IMPORTANT DEPLOYMENT NOTES
+# --------------------------------------------------
+
+# In the original laboratory these settings were
+# supplied through PostgreSQL startup arguments
+# in Docker Compose, rather than this config file.
+#
+# max_connections and shared_buffers require
+# a PostgreSQL restart to become effective.
+#
+# The database container was recreated without
+# deleting its persistent volume.
+#
+# This example file documents the verified values;
+# it was not the deployment file used in the lab.
