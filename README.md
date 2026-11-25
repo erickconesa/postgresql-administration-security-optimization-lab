@@ -144,6 +144,42 @@ The final checks verified:
 - Backup procedures.
 - Technical validation and documentation.
 
+## Technical Evidence
+
+The following screenshots were captured during the PostgreSQL 17 laboratory and sanitized for public documentation.
+
+### 1. PostgreSQL Connection Access Control
+
+**Validation:** Unauthorized connections rejected by `pg_hba.conf`.
+
+A temporary test network was used to verify that PostgreSQL actively rejected connections from an unauthorized source.
+
+![PostgreSQL connection rejected by pg_hba.conf](evidence/01-pg-hba-rejected-connection.png)
+
+### 2. Least-Privilege Role Enforcement
+
+**Validation:** Unauthorized DDL operations rejected.
+
+The restricted database role successfully performed permitted data operations but was prevented from modifying or deleting table structures.
+
+The laboratory verified that `ALTER TABLE` and `DROP TABLE` were denied.
+
+![PostgreSQL DDL permission restrictions](evidence/02-ddl-permissions-denied.png)
+
+### 3. SQL Query Optimization
+
+**Validation:** Index selection and query performance analysis.
+
+The first optimization test demonstrated a change from Sequential Scan to Index Scan.
+
+Recorded execution time decreased from 2.871 ms to 1.046 ms, with shared buffer usage reduced from 105 to 26.
+
+These values represent individual laboratory executions rather than averaged performance benchmarks.
+
+![PostgreSQL query optimization using EXPLAIN ANALYZE](evidence/03-query-index-optimization.png)
+
+For additional results, including an unsuccessful index optimization attempt, see [Query Performance Analysis](docs/query-performance.md).
+
 ## Security and Privacy
 
 This public repository contains sanitized educational examples and documentation.
